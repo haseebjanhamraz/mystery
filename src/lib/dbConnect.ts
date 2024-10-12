@@ -1,24 +1,25 @@
 import mongoose from 'mongoose'
-import express from 'mongoose'
 
 type ConnectionObject = {
     isConnected?: number
 }
 
 const connection: ConnectionObject = {}
-
+const MONGODB_URI = process.env.MONGODB_URI;
 async function dbConnect(): Promise<void> {
     if (connection.isConnected) {
         console.log("Already connected to database")
         return
     }
     try {
-        const db = await mongoose.connect(process.env.MONGODB_URI || "", {})
+        console.log("Connecting to database...")
+        const db = await mongoose.connect(MONGODB_URI || "", {})
         connection.isConnected = db.connections[0].readyState
         console.log("Connected to database")
     } catch (error) {
-        console.log("Database connection faild", error)
-        process.exit(1)
+        console.log("Database connection failed")
+        // console.error(error)
+        // process.exit(1)
     }
 }
 
